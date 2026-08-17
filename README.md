@@ -1,32 +1,130 @@
-# React + TypeScript + Vite
+# 博士申请管理器
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> 🚀 **在线访问：** https://14677c494413464eb57c5cb4a3092887.sg.agentos-app.run
 
-Currently, two official plugins are available:
+一个帮你把零散申请信息集中管理的看板工具。纯前端运行，数据保存在本地浏览器中，刷新不丢失。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 功能概览
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| 模块 | 说明 |
+|------|------|
+| **申请总览** | 集中展示所有申请学校，显示截止日倒计时、资助情况、梯队标签。支持添加、编辑、删除、搁置学校，一键跳转官网。 |
+| **材料清单** | 按学校追踪通用申请材料（SOP、CV、Writing Sample、成绩单、推荐信、申请费等），三态进度切换（未开始 → 进行中 → 已完成）。 |
+| **导师沟通** | 记录套磁进度，包括导师姓名、职务、联系时间、邮件内容、沟通结果与对申请的影响评估。 |
+| **文书资料库** | 按类型分类存放 SOP、Writing Sample、CV 等文书，支持系统内直接编辑和保存。 |
+| **推荐人管理** | 追踪推荐人信息、需提交推荐信数量、已提交数量、提醒时间与当前状态。 |
+| **申请梯队** | 按冲刺 / 主申 / 保底梯队分表展示，支持按国家、方向、资助情况筛选。 |
+| **备选与搁置** | 把暂不考虑的项目移入此处，后续可随时重新激活回主列表。 |
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## 快速开始
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### 1. 在线使用（推荐）
+
+直接打开上面的链接即可开始使用。所有数据自动保存在浏览器 localStorage 中，关闭页面或刷新后数据不丢失。
+
+### 2. 本地运行
+
+```bash
+# 进入项目目录
+cd phd-tracker
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## 数据备份
+
+⚠️ **重要：** localStorage 中的数据仅保存在当前浏览器中，换设备或清除浏览器数据会丢失。
+
+强烈建议**定期导出备份**：
+
+1. 点击左侧边栏底部的 **「导出备份」** 按钮
+2. 系统会下载一个 JSON 文件到本地
+3. 需要恢复时，点击 **「导入备份」** 按钮，选择之前下载的 JSON 文件即可
+
+---
+
+## 各模块使用指南
+
+### 申请总览
+
+- 点击右上角 **「添加学校」** 填写学校信息
+- 卡片上的标签显示：梯队（冲刺/主申/保底）、资助情况、截止日倒计时
+- **≤ 7 天** 的截止日会以**红色高亮**提醒
+- 点击卡片上的链接图标可跳转学校官网
+- 点击暂停图标可将学校移入「备选与搁置」
+
+### 材料清单
+
+- 按学校分组展示所有材料
+- 点击状态图标切换进度：**○ 未开始** → **◐ 进行中** → **● 已完成**
+- 顶部的进度条显示整体完成比例
+
+### 导师沟通
+
+- 记录每位导师的套磁详情
+- 标记沟通结果（无回复/积极/中性/消极/面试邀请）
+- 评估对申请的影响程度（高/中/低）
+- 设置跟进日期，方便追踪后续行动
+
+### 文书资料库
+
+- 按 SOP / Writing Sample / CV / 其他 分类管理
+- 点击文书卡片可查看完整内容
+- 支持在系统内直接编辑和保存
+- 可关联目标学校和申请方向
+
+### 推荐人管理
+
+- 记录推荐人姓名、邮箱
+- 追踪「需提交数」与「已提交数」
+- 设置提醒日期，逾期自动标红
+- 状态自动计算：pending → overdue → submitted
+
+### 申请梯队
+
+- 按梯队分表展示，一目了然
+- 使用顶部筛选栏按**国家、方向、资助**快速过滤目标学校
+- 表格中直接显示截止日倒计时
+
+### 备选与搁置
+
+- 被搁置的学校会显示在此处，卡片呈灰色半透明
+- 点击播放图标可随时**重新激活**回主列表
+- 也可直接删除不再考虑的项目
+
+---
+
+## 技术栈
+
+- React 19 + TypeScript + Vite
+- Tailwind CSS（暗色主题）
+- React Router v7
+- Zustand + localStorage 持久化
+- Lucide React 图标
+
+---
+
+## 注意事项
+
+- 截止日倒计时基于浏览器本地时间计算
+- 所有数据存储在浏览器 localStorage 中，请定期导出备份
+- 如需重置为初始示例数据，点击左侧边栏底部的「重置数据」按钮
+
+---
+
+## License
+
+MIT

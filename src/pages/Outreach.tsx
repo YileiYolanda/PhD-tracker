@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Plus, Pencil, Trash2, Mail, Calendar, AlertCircle } from 'lucide-react'
+import { Plus, Pencil, Trash2, Mail, Calendar, AlertCircle, ExternalLink, BookOpen, FileCheck, Users } from 'lucide-react'
 import { useAppStore } from '../stores/appStore'
 import { formatDate } from '../lib/utils'
-import { OUTREACH_RESULT_LABELS, IMPACT_LABELS, type Professor, type OutreachResult, type ImpactLevel } from '../types'
+import { OUTREACH_RESULT_LABELS, IMPACT_LABELS, ADMISSION_STATUS_LABELS, ADMISSION_STATUS_COLORS, type Professor, type OutreachResult, type ImpactLevel } from '../types'
 
 const resultColors: Record<OutreachResult, string> = {
   'no-reply': 'text-slate-400',
@@ -23,6 +23,8 @@ export default function Outreach() {
   const [editing, setEditing] = useState<Professor | null>(null)
   const [showForm, setShowForm] = useState(false)
 
+  const [viewing, setViewing] = useState<Professor | null>(null)
+
   const activeSchools = schools.filter((s) => s.status !== 'on-hold')
 
   const emptyForm: Omit<Professor, 'id'> = {
@@ -36,6 +38,11 @@ export default function Outreach() {
     result: 'no-reply',
     impact: 'medium',
     notes: '',
+    homepage: '',
+    researchAreas: '',
+    admissionStatus: 'unknown',
+    requirements: '',
+    recentPapers: '',
   }
 
   const [form, setForm] = useState(emptyForm)
@@ -76,6 +83,132 @@ export default function Outreach() {
           添加记录
         </button>
       </div>
+
+      {/* 导师档案详情弹窗 */}
+      {viewing && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold">{viewing.name}</h3>
+                <p className="text-sm text-slate-400">
+                  {viewing.title} · {schools.find((s) => s.id === viewing.schoolId)?.name}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setViewing(null)
+                    openEdit(viewing)
+                  }}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  编辑
+                </button>
+                <button
+                  onClick={() => setViewing(null)}
+                  className="p-1.5 text-slate-500 hover:text-slate-300 rounded-lg hover:bg-slate-800 transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              <div className="flex flex-wrap gap-2">
+                {viewing.admissionStatus && (
+                  <span className={`px-2 py-0.5 rounded text-xs border ${ADMISSION_STATUS_COLORS[viewing.admissionStatus]}`}>
+                    {ADMISSION_STATUS_LABELS[viewing.admissionStatus]}
+                  </span>
+                )}
+                <span className={`px-2 py-0.5 rounded text-xs border ${impactColors[viewing.impact]}`}>
+                  影响：{IMPACT_LABELS[viewing.impact]}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                {viewing.email && (
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Mail className="w-4 h-4 text-slate-500" />
+                    <a href={`mailto:${viewing.email}`} className="text-indigo-400 hover:text-indigo-300">{viewing.email}</a>
+                  </div>
+                )}
+                {viewing.homepage && (
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <ExternalLink className="w-4 h-4 text-slate-500" />
+                    <a href={viewing.homepage} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 truncate">{viewing.homepage}</a>
+                  </div>
+                )}
+              </div>
+
+              {viewing.researchAreas && (
+                <div>
+                  <h4 className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                    <BookOpen className="w-4 h-4 text-indigo-400" />
+                    研究方向
+                  </h4>
+                  <p className="text-sm text-slate-400 bg-slate-800/50 rounded-lg p-3">{viewing.researchAreas}</p>
+                </div>
+              )}
+
+              {viewing.requirements && (
+                <div>
+                  <h4 className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                    <FileCheck className="w-4 h-4 text-amber-400" />
+                    具体要求
+                  </h4>
+                  <p className="text-sm text-slate-400 bg-slate-800/50 rounded-lg p-3 whitespace-pre-wrap">{viewing.requirements}</p>
+                </div>
+              )}
+
+              {viewing.recentPapers && (
+                <div>
+                  <h4 className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                    <BookOpen className="w-4 h-4 text-emerald-400" />
+                    近年论文
+                  </h4>
+                  <div className="text-sm text-slate-400 bg-slate-800/50 rounded-lg p-3 whitespace-pre-wrap font-mono leading-relaxed">
+                    {viewing.recentPapers}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <h4 className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
+                  <Users className="w-4 h-4 text-sky-400" />
+                  沟通记录
+                </h4>
+                <div className="bg-slate-800/50 rounded-lg p-3 space-y-2">
+                  <div className={`text-sm ${resultColors[viewing.result]}`}>
+                    结果：{OUTREACH_RESULT_LABELS[viewing.result]}
+                  </div>
+                  {viewing.firstContactDate && (
+                    <div className="flex items-center gap-1 text-xs text-slate-400">
+                      <Calendar className="w-3.5 h-3.5" />
+                      首次联系：{formatDate(viewing.firstContactDate)}
+                    </div>
+                  )}
+                  {viewing.followUpDate && (
+                    <div className="flex items-center gap-1 text-xs text-amber-400">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      跟进时间：{formatDate(viewing.followUpDate)}
+                    </div>
+                  )}
+                  {viewing.lastEmailContent && (
+                    <div className="text-sm text-slate-300 mt-2 border-t border-slate-700 pt-2">
+                      {viewing.lastEmailContent}
+                    </div>
+                  )}
+                  {viewing.notes && (
+                    <p className="text-xs text-slate-500 mt-1">备注：{viewing.notes}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
@@ -220,7 +353,13 @@ export default function Outreach() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-slate-100">{prof.name}</h3>
+                    <h3
+                      className="font-semibold text-slate-100 hover:text-indigo-300 cursor-pointer transition-colors"
+                      onClick={() => setViewing(prof)}
+                      title="点击查看导师档案"
+                    >
+                      {prof.name}
+                    </h3>
                     <span className={`px-2 py-0.5 rounded text-xs border ${impactColors[prof.impact]}`}>
                       影响：{IMPACT_LABELS[prof.impact]}
                     </span>

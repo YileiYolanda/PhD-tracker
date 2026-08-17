@@ -93,6 +93,12 @@ export const seedProfessors: Professor[] = [
     result: 'positive',
     impact: 'high',
     notes: '回复很热情，建议直接申请',
+    homepage: 'https://people.csail.mit.edu/smith/',
+    researchAreas: 'Computer Vision, Deep Learning, Medical AI',
+    admissionStatus: 'recruiting',
+    requirements: 'Strong programming skills (Python/C++), background in machine learning, and at least one first-author paper.',
+    recentPapers:
+      '1. Smith et al. (2026). "Vision-Language Models for Medical Diagnosis." CVPR.\n2. Smith & Lee (2025). "Self-Supervised Learning in Low-Data Regimes." NeurIPS.\n3. Smith et al. (2024). "Interpretable Deep Networks." ICML.',
   },
   {
     id: 'p2',
@@ -105,6 +111,12 @@ export const seedProfessors: Professor[] = [
     result: 'no-reply',
     impact: 'medium',
     notes: '可能需要跟进',
+    homepage: 'https://theory.stanford.edu/~johnson/',
+    researchAreas: 'Distributed Systems, Cloud Computing, Operating Systems',
+    admissionStatus: 'uncertain',
+    requirements: 'Experience with systems programming, familiarity with Linux kernel, and prior research in distributed systems preferred.',
+    recentPapers:
+      '1. Johnson et al. (2026). "Serverless Computing at Scale." OSDI.\n2. Johnson & Kim (2025). "Rethinking Network Stacks." SIGCOMM.\n3. Johnson et al. (2024). "Edge-Cloud Collaborative Learning." NSDI.',
   },
 ]
 

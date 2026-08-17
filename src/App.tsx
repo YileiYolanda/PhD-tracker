@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import Overview from './pages/Overview'
 import Materials from './pages/Materials'
 import Outreach from './pages/Outreach'
+import ProfessorProfiles from './pages/ProfessorProfiles'
 import Documents from './pages/Documents'
 import Recommenders from './pages/Recommenders'
 import Tiers from './pages/Tiers'
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Overview />} />
         <Route path="/materials" element={<Materials />} />
         <Route path="/outreach" element={<Outreach />} />
+        <Route path="/professors" element={<ProfessorProfiles />} />
         <Route path="/documents" element={<Documents />} />
         <Route path="/recommenders" element={<Recommenders />} />
         <Route path="/tiers" element={<Tiers />} />

@@ -43,7 +43,29 @@ export interface Professor {
   result: OutreachResult;
   impact: ImpactLevel;
   notes: string;
+  // 导师档案字段
+  homepage?: string;
+  researchAreas?: string;
+  admissionStatus?: 'recruiting' | 'full' | 'uncertain' | 'unknown';
+  requirements?: string;
+  recentPapers?: string;
 }
+
+export type AdmissionStatusType = 'recruiting' | 'full' | 'uncertain' | 'unknown';
+
+export const ADMISSION_STATUS_LABELS: Record<AdmissionStatusType, string> = {
+  recruiting: '正在招生',
+  full: '名额已满',
+  uncertain: '不确定',
+  unknown: '未知',
+};
+
+export const ADMISSION_STATUS_COLORS: Record<AdmissionStatusType, string> = {
+  recruiting: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  full: 'bg-red-500/20 text-red-300 border-red-500/30',
+  uncertain: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+  unknown: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+};
 
 export interface Document {
   id: string;

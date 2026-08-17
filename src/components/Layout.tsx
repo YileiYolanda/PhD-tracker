@@ -10,6 +10,7 @@ import {
   Download,
   Upload,
   RotateCcw,
+  GraduationCap,
 } from 'lucide-react'
 import { useAppStore } from '../stores/appStore'
 import { daysUntil } from '../lib/utils'
@@ -18,6 +19,7 @@ const navItems = [
   { to: '/', label: '申请总览', icon: LayoutDashboard },
   { to: '/materials', label: '材料清单', icon: ClipboardList },
   { to: '/outreach', label: '导师沟通', icon: Mail },
+  { to: '/professors', label: '导师管理', icon: GraduationCap },
   { to: '/documents', label: '文书资料库', icon: FileText },
   { to: '/recommenders', label: '推荐人管理', icon: Users },
   { to: '/tiers', label: '申请梯队', icon: BarChart3 },

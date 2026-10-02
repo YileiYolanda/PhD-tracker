@@ -9,10 +9,11 @@ import Documents from './pages/Documents'
 import Recommenders from './pages/Recommenders'
 import Tiers from './pages/Tiers'
 import OnHold from './pages/OnHold'
+import CloudGate from './components/CloudGate'
 
 function App() {
   return (
-    <Layout>
+    <CloudGate><Layout>
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/materials" element={<Materials />} />
@@ -24,7 +25,7 @@ function App() {
         <Route path="/tiers" element={<Tiers />} />
         <Route path="/on-hold" element={<OnHold />} />
       </Routes>
-    </Layout>
+    </Layout></CloudGate>
   )
 }
 

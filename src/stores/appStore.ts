@@ -1,5 +1,7 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
+import { cloudConfigured } from '../lib/supabase'
+import { parseData } from '../lib/trackerData'
 import type { School, Material, Professor, Document, Recommender, Interview } from '../types'
 import { seedSchools, seedMaterials, seedProfessors, seedDocuments, seedRecommenders, seedInterviews } from '../data/seed'
 import { generateId } from '../lib/utils'
@@ -152,17 +154,9 @@ export const useAppStore = create<AppState>()(
       },
       importData: (json) => {
         try {
-          const data = JSON.parse(json)
-          set({
-            schools: data.schools || [],
-            materials: data.materials || [],
-            professors: data.professors || [],
-            documents: data.documents || [],
-            recommenders: data.recommenders || [],
-            interviews: data.interviews || [],
-          })
-        } catch {
-          alert('导入失败：JSON 格式错误')
+          set(parseData(JSON.parse(json)))
+        } catch (error) {
+          alert(`导入失败：${error instanceof Error ? error.message : 'JSON 格式错误'}`)
         }
       },
       resetData: () =>
@@ -177,6 +171,12 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'phd-tracker-storage',
+      // Cloud accounts use isolated durable caches; never overwrite the legacy guest backup.
+      storage: createJSONStorage(() => cloudConfigured ? {
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      } : localStorage),
     }
   )
 )

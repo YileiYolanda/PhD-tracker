@@ -57,6 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0]
       if (!file) return
+      if (!confirm('导入会替换当前全部数据；登录云账号时也会同步到其他设备。确定继续吗？')) return
       const reader = new FileReader()
       reader.onload = (ev) => {
         const content = ev.target?.result as string
@@ -68,9 +69,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100">
+    <div className="flex flex-1 min-h-0 overflow-hidden bg-slate-950 text-slate-100">
       {/* Sidebar */}
-      <aside className="w-56 bg-slate-900 border-r border-slate-800 flex flex-col fixed h-screen z-10">
+      <aside className="w-56 shrink-0 bg-slate-900 border-r border-slate-800 flex flex-col h-full z-10">
         <div className="p-4 border-b border-slate-800">
           <h1 className="text-lg font-bold text-slate-100 flex items-center gap-2">
             <LayoutDashboard className="w-5 h-5 text-indigo-400" />
@@ -128,7 +129,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-56">
+      <main className="flex-1 min-w-0 overflow-y-auto">
         {/* Top Bar */}
         <header className="sticky top-0 z-10 bg-slate-900/80 backdrop-blur border-b border-slate-800 px-6 py-3">
           <div className="flex items-center justify-between">

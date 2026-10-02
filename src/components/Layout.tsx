@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { useAppStore } from '../stores/appStore'
 import { daysUntil } from '../lib/utils'
+import ReminderCenter from './ReminderCenter'
 
 const navItems = [
   { to: '/', label: '申请总览', icon: LayoutDashboard },
@@ -36,7 +37,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const appliedCount = schools.filter((s) => s.status === 'applied' || s.status === 'admitted').length
   const urgentCount = activeSchools.filter((s) => {
     const days = daysUntil(s.deadline)
-    return days <= 7 && days >= 0
+    return s.status === 'active' && days <= 7 && days >= 0
   }).length
 
   const handleExport = () => {
@@ -149,6 +150,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
               )}
             </div>
+            <ReminderCenter />
           </div>
         </header>
 

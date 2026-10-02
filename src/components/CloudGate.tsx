@@ -5,6 +5,7 @@ import { parseData, snapshot } from '../lib/trackerData'
 import { SyncEngine } from '../lib/syncEngine'
 import type { Cache, SyncView } from '../lib/syncEngine'
 import { useAppStore } from '../stores/appStore'
+import { AccountScope } from '../lib/accountScope'
 
 const button = 'rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white disabled:opacity-50'
 const initialView: SyncView = { ready: false, status: 'loading', message: '正在读取云端数据…', pending: false }
@@ -171,7 +172,7 @@ function AccountWorkspace({ session, children }: { session: Session; children: R
         <button className="text-slate-500" onClick={() => setLegacyAvailable(false)}>暂不导入</button>
       </div>}
     </div>
-    {view.ready ? children : <div className="p-10 text-slate-400">登录后先读取云端数据，防止覆盖已有申请。连接失败时可点击「立即同步」重试。</div>}
+    {view.ready ? <AccountScope.Provider value={session.user.id}>{children}</AccountScope.Provider> : <div className="p-10 text-slate-400">登录后先读取云端数据，防止覆盖已有申请。连接失败时可点击「立即同步」重试。</div>}
   </div>
 }
 

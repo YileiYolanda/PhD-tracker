@@ -40,6 +40,9 @@ export default function Materials() {
     status: 'not-started',
     dueDate: undefined,
     notes: '',
+    targetProfessor: undefined,
+    sentDate: undefined,
+    amount: undefined,
   }
 
   const [form, setForm] = useState(emptyForm)
@@ -87,43 +90,82 @@ export default function Materials() {
 
       {showForm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-md">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 w-full max-w-lg">
             <h3 className="text-lg font-semibold mb-4">{editing ? '编辑材料' : '添加材料'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">学校</label>
-                <select
-                  required
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
-                  value={form.schoolId}
-                  onChange={(e) => setForm({ ...form, schoolId: e.target.value })}
-                >
-                  {activeSchools.map((s) => (
-                    <option key={s.id} value={s.id}>{s.name} - {s.program}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">学校</label>
+                  <select
+                    required
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.schoolId}
+                    onChange={(e) => setForm({ ...form, schoolId: e.target.value })}
+                  >
+                    {activeSchools.map((s) => (
+                      <option key={s.id} value={s.id}>{s.name} - {s.program}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">材料类型</label>
+                  <select
+                    required
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.type}
+                    onChange={(e) => setForm({ ...form, type: e.target.value as MaterialType })}
+                  >
+                    {Object.entries(MATERIAL_LABELS).map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">材料类型</label>
-                <select
-                  required
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value as MaterialType })}
-                >
-                  {Object.entries(MATERIAL_LABELS).map(([key, label]) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">截止日期</label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.dueDate || ''}
+                    onChange={(e) => setForm({ ...form, dueDate: e.target.value || undefined })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">发送日期</label>
+                  <input
+                    type="date"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.sentDate || ''}
+                    onChange={(e) => setForm({ ...form, sentDate: e.target.value || undefined })}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm text-slate-400 mb-1">截止日期</label>
-                <input
-                  type="date"
-                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
-                  value={form.dueDate}
-                  onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">关联导师（可选）</label>
+                  <input
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.targetProfessor || ''}
+                    onChange={(e) => setForm({ ...form, targetProfessor: e.target.value || undefined })}
+                    placeholder="Prof. Smith"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">金额（申请费时填写）</label>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm focus:outline-none focus:border-indigo-500"
+                    value={form.amount || ''}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value)
+                      setForm({ ...form, amount: isNaN(val) ? undefined : val })
+                    }}
+                    placeholder="USD"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm text-slate-400 mb-1">备注</label>
@@ -201,10 +243,27 @@ export default function Materials() {
                             <StatusIcon className="w-5 h-5" />
                           </button>
                           <div>
-                            <span className="text-sm text-slate-200">{MATERIAL_LABELS[material.type]}</span>
-                            {material.dueDate && (
-                              <span className="ml-2 text-xs text-slate-500">截止：{material.dueDate}</span>
-                            )}
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm text-slate-200">{MATERIAL_LABELS[material.type]}</span>
+                              {material.targetProfessor && (
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300">
+                                  {material.targetProfessor}
+                                </span>
+                              )}
+                              {material.amount !== undefined && material.amount > 0 && (
+                                <span className="text-xs px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300">
+                                  ${material.amount}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              {material.dueDate && (
+                                <span className="text-xs text-slate-500">截止：{material.dueDate}</span>
+                              )}
+                              {material.sentDate && (
+                                <span className="text-xs text-emerald-500/80">已发送：{material.sentDate}</span>
+                              )}
+                            </div>
                             {material.notes && (
                               <p className="text-xs text-slate-500 mt-0.5">{material.notes}</p>
                             )}

@@ -29,6 +29,10 @@ export interface Material {
   status: MaterialStatus;
   dueDate?: string;
   notes: string;
+  // 增强字段
+  targetProfessor?: string; // 关联的导师姓名
+  sentDate?: string; // 材料发送日期
+  amount?: number; // 申请费金额
 }
 
 export interface Professor {
@@ -88,6 +92,25 @@ export interface Recommender {
   notes: string;
 }
 
+export type InterviewFormat = 'zoom' | 'onsite' | 'phone' | 'video' | 'other';
+export type InterviewStatus = 'scheduled' | 'completed' | 'cancelled' | 'pending';
+
+export interface Interview {
+  id: string;
+  schoolId: string;
+  professorId?: string;
+  professorName?: string;
+  dateTime: string; // ISO datetime
+  format: InterviewFormat;
+  duration?: number; // minutes
+  interviewer?: string;
+  status: InterviewStatus;
+  notesBefore?: string;
+  notesAfter?: string;
+  feedback?: string;
+  result?: 'positive' | 'neutral' | 'negative' | 'unknown';
+}
+
 export const MATERIAL_LABELS: Record<MaterialType, string> = {
   ws: 'Writing Sample',
   cv: 'CV / 简历',
@@ -131,4 +154,33 @@ export const IMPACT_LABELS: Record<ImpactLevel, string> = {
   high: '高',
   medium: '中',
   low: '低',
+};
+
+export const INTERVIEW_FORMAT_LABELS: Record<InterviewFormat, string> = {
+  zoom: 'Zoom',
+  onsite: '现场',
+  phone: '电话',
+  video: '视频（其他）',
+  other: '其他',
+};
+
+export const INTERVIEW_STATUS_LABELS: Record<InterviewStatus, string> = {
+  scheduled: '已安排',
+  completed: '已完成',
+  cancelled: '已取消',
+  pending: '待定',
+};
+
+export const INTERVIEW_STATUS_COLORS: Record<InterviewStatus, string> = {
+  scheduled: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
+  completed: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+  cancelled: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
+  pending: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+};
+
+export const INTERVIEW_RESULT_LABELS: Record<string, string> = {
+  positive: '积极',
+  neutral: '中性',
+  negative: '消极',
+  unknown: '未知',
 };

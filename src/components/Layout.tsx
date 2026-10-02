@@ -11,6 +11,7 @@ import {
   Upload,
   RotateCcw,
   GraduationCap,
+  CalendarCheck,
 } from 'lucide-react'
 import { useAppStore } from '../stores/appStore'
 import { daysUntil } from '../lib/utils'
@@ -20,6 +21,7 @@ const navItems = [
   { to: '/materials', label: '材料清单', icon: ClipboardList },
   { to: '/outreach', label: '导师沟通', icon: Mail },
   { to: '/professors', label: '导师管理', icon: GraduationCap },
+  { to: '/interviews', label: '面试管理', icon: CalendarCheck },
   { to: '/documents', label: '文书资料库', icon: FileText },
   { to: '/recommenders', label: '推荐人管理', icon: Users },
   { to: '/tiers', label: '申请梯队', icon: BarChart3 },

@@ -1,4 +1,4 @@
-import type { School, Material, Professor, Document, Recommender } from '../types'
+import type { School, Material, Professor, Document, Recommender, Interview } from '../types'
 
 export const seedSchools: School[] = [
   {
@@ -69,14 +69,14 @@ export const seedSchools: School[] = [
 ]
 
 export const seedMaterials: Material[] = [
-  { id: 'm1', schoolId: 's1', type: 'sop', status: 'in-progress', notes: '' },
-  { id: 'm2', schoolId: 's1', type: 'cv', status: 'completed', notes: '' },
+  { id: 'm1', schoolId: 's1', type: 'sop', status: 'in-progress', notes: '需要根据 Prof. Smith 的研究方向调整', targetProfessor: 'Prof. Smith' },
+  { id: 'm2', schoolId: 's1', type: 'cv', status: 'completed', notes: '', sentDate: '2026-09-01' },
   { id: 'm3', schoolId: 's1', type: 'ws', status: 'not-started', notes: '' },
   { id: 'm4', schoolId: 's1', type: 'transcript', status: 'not-started', notes: '' },
-  { id: 'm5', schoolId: 's1', type: 'lor', status: 'not-started', notes: '' },
-  { id: 'm6', schoolId: 's1', type: 'fee', status: 'not-started', notes: '' },
+  { id: 'm5', schoolId: 's1', type: 'lor', status: 'not-started', notes: '请王教授写', targetProfessor: 'Prof. Smith' },
+  { id: 'm6', schoolId: 's1', type: 'fee', status: 'not-started', notes: '', amount: 75 },
   { id: 'm7', schoolId: 's2', type: 'sop', status: 'in-progress', notes: '' },
-  { id: 'm8', schoolId: 's2', type: 'cv', status: 'completed', notes: '' },
+  { id: 'm8', schoolId: 's2', type: 'cv', status: 'completed', notes: '', sentDate: '2026-09-05' },
   { id: 'm9', schoolId: 's3', type: 'sop', status: 'not-started', notes: '' },
 ]
 
@@ -158,5 +158,37 @@ export const seedRecommenders: Recommender[] = [
     reminderDate: '2026-11-01',
     status: 'pending',
     notes: '课程老师',
+  },
+]
+
+export const seedInterviews: Interview[] = [
+  {
+    id: 'i1',
+    schoolId: 's1',
+    professorId: 'p1',
+    professorName: 'Prof. Smith',
+    dateTime: '2026-10-15T14:00',
+    format: 'zoom',
+    duration: 30,
+    interviewer: 'Prof. Smith + 1 committee member',
+    status: 'scheduled',
+    notesBefore: '准备介绍自己的研究经历和对该实验室的兴趣，复习 Prof. Smith 近年的三篇论文。',
+    notesAfter: '',
+    feedback: '',
+    result: 'unknown',
+  },
+  {
+    id: 'i2',
+    schoolId: 's3',
+    professorName: 'Prof. Chen',
+    dateTime: '2026-09-20T10:00',
+    format: 'onsite',
+    duration: 60,
+    interviewer: 'Prof. Chen',
+    status: 'completed',
+    notesBefore: '提前一天到 Pittsburgh，熟悉校园和交通。',
+    notesAfter: '面试氛围很好，Prof. Chen 对我的项目经历很感兴趣，问了很多技术细节。',
+    feedback: '整体感觉不错，说会在两周内给结果。',
+    result: 'positive',
   },
 ]

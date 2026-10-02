@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { School, Material, Professor, Document, Recommender } from '../types'
-import { seedSchools, seedMaterials, seedProfessors, seedDocuments, seedRecommenders } from '../data/seed'
+import type { School, Material, Professor, Document, Recommender, Interview } from '../types'
+import { seedSchools, seedMaterials, seedProfessors, seedDocuments, seedRecommenders, seedInterviews } from '../data/seed'
 import { generateId } from '../lib/utils'
 
 interface AppState {
@@ -10,6 +10,7 @@ interface AppState {
   professors: Professor[]
   documents: Document[]
   recommenders: Recommender[]
+  interviews: Interview[]
 
   // Schools
   addSchool: (school: Omit<School, 'id'>) => void
@@ -38,6 +39,11 @@ interface AppState {
   updateRecommender: (id: string, recommender: Partial<Recommender>) => void
   deleteRecommender: (id: string) => void
 
+  // Interviews
+  addInterview: (interview: Omit<Interview, 'id'>) => void
+  updateInterview: (id: string, interview: Partial<Interview>) => void
+  deleteInterview: (id: string) => void
+
   // Import / Export
   exportData: () => string
   importData: (json: string) => void
@@ -52,6 +58,7 @@ export const useAppStore = create<AppState>()(
       professors: seedProfessors,
       documents: seedDocuments,
       recommenders: seedRecommenders,
+      interviews: seedInterviews,
 
       addSchool: (school) =>
         set((state) => ({ schools: [...state.schools, { ...school, id: generateId() }] })),
@@ -119,6 +126,15 @@ export const useAppStore = create<AppState>()(
       deleteRecommender: (id) =>
         set((state) => ({ recommenders: state.recommenders.filter((r) => r.id !== id) })),
 
+      addInterview: (interview) =>
+        set((state) => ({ interviews: [...state.interviews, { ...interview, id: generateId() }] })),
+      updateInterview: (id, interview) =>
+        set((state) => ({
+          interviews: state.interviews.map((i) => (i.id === id ? { ...i, ...interview } : i)),
+        })),
+      deleteInterview: (id) =>
+        set((state) => ({ interviews: state.interviews.filter((i) => i.id !== id) })),
+
       exportData: () => {
         const state = get()
         return JSON.stringify(
@@ -128,6 +144,7 @@ export const useAppStore = create<AppState>()(
             professors: state.professors,
             documents: state.documents,
             recommenders: state.recommenders,
+            interviews: state.interviews,
           },
           null,
           2
@@ -142,6 +159,7 @@ export const useAppStore = create<AppState>()(
             professors: data.professors || [],
             documents: data.documents || [],
             recommenders: data.recommenders || [],
+            interviews: data.interviews || [],
           })
         } catch {
           alert('导入失败：JSON 格式错误')
@@ -154,6 +172,7 @@ export const useAppStore = create<AppState>()(
           professors: seedProfessors,
           documents: seedDocuments,
           recommenders: seedRecommenders,
+          interviews: seedInterviews,
         }),
     }),
     {

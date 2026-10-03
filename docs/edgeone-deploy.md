@@ -1,6 +1,14 @@
 # 迁移到 EdgeOne：GitHub 自动部署
 
-项目继续使用现有 Supabase；不用迁移数据库、重新运行建库 SQL 或重新导入已同步的数据。首次连接尚需在腾讯云控制台完成，新增配置文件本身不会创建线上项目。
+项目继续使用现有 Supabase；不用迁移数据库、重新运行建库 SQL 或重新导入已同步的数据。当前项目已完成控制台连接；其他项目首次部署时仍需完成以下连接步骤，新增配置文件本身不会创建线上项目。
+
+## 当前项目状态（2026-10-03）
+
+- EdgeOne 项目：`phd-tracker`，项目 ID：`makers-pveg9b4p50mo`。
+- GitHub `main` 已连接自动部署，提交 `41c7574` 的生产部署 `dprc32qiou1e` 已成功。
+- 项目入口：<https://phd-tracker-hbssmizy.edgeone.dev/>，域名管理显示「已生效」，已验证登录页面加载。
+- `https://phd-tracker-dprc32qiou1e.edgeone.dev/` 是对应单次部署的链接，日常访问和 Supabase 回跳配置使用上方项目入口。
+- 使用者已确认数据验证成功，并完成 Supabase Site URL 与 Redirect URLs 配置。以下首次连接步骤供复现部署时参考。
 
 ## 首次连接
 

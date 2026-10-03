@@ -1,0 +1,8 @@
+{
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build:cloud",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/*", "destination": "/index.html" }
+  ]
+}

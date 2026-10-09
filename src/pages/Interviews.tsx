@@ -378,7 +378,7 @@ export default function InterviewsPage() {
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm('确定删除吗？')) deleteInterview(interview.id)
+                      if (confirm('确定移入回收站吗？之后可在回收站恢复。')) deleteInterview(interview.id)
                     }}
                     className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition-colors"
                   >

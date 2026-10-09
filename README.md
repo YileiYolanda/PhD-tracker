@@ -52,7 +52,7 @@ npm run dev
 
 ### 3. 启用 Supabase 云端登录
 
-1. 创建 Supabase 项目，在 SQL Editor 中运行一次 [`supabase/migrations/001_tracker.sql`](supabase/migrations/001_tracker.sql)。
+1. 创建 Supabase 项目，在 SQL Editor 中依次运行一次 [`001_tracker.sql`](supabase/migrations/001_tracker.sql) 和 [`002_trash.sql`](supabase/migrations/002_trash.sql)。
 2. 将根目录的 [`.env.example`](.env.example) 复制为 `.env.local`，填写 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_PUBLISHABLE_KEY`（publishable 或旧版 anon 公钥）。不要填入 service_role 密钥。
 3. 配置邮箱登录及验证邮件的跳转地址，详细步骤见[云端配置指南](docs/cloud-setup.md)。
 4. 启动或重启开发服务器，在应用中注册、验证邮箱并登录。新账号默认从空数据开始。
@@ -208,6 +208,17 @@ npm run build
 ---
 
 ## 注意事项
+
+### 回收站与误删恢复
+
+- 左侧「回收站」保留删除的申请学校、材料、导师与沟通记录、文书、推荐人和面试；支持按类型筛选和恢复。
+- 删除学校时，关联材料、导师及沟通记录、面试一起移入回收站，恢复时一起还原。文书的目标学校为文字备注，不随学校删除。
+- 导师档案与导师沟通共用一条数据，删除和恢复会同时影响两个页面。
+- 回收站不自动清空，随账号同步，也包含在 JSON 导出备份中。永久删除必须输入「永久删除」确认，之后无法通过回收站恢复。
+- 单独删除的材料、导师、面试需要先恢复所属学校；恢复遇到相同编号会停止，避免覆盖现有数据。
+- 此功能仅保护升级后的删除操作。此前已删除的记录需要从旧备份找回；导入备份和重置数据属于批量替换，不提供回收站撤销，操作前请导出备份。
+
+**已有 Supabase 项目升级：** 先在 SQL Editor 运行 `supabase/migrations/002_trash.sql`（不要重新运行建表脚本 `001_tracker.sql`），再推送代码等待 EdgeOne 部署成功，并刷新所有设备上的网页。新增数据库保护会阻止未升级的旧网页覆盖非空回收站。新建数据库按顺序运行 `001_tracker.sql` 和 `002_trash.sql`。不需要修改环境变量。
 
 - 截止日倒计时基于浏览器本地时间计算
 - 云端模式以「已与云端同步」为保存成功标志；建议仍定期导出备份

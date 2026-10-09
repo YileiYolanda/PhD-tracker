@@ -10,6 +10,7 @@ import Recommenders from './pages/Recommenders'
 import Tiers from './pages/Tiers'
 import OnHold from './pages/OnHold'
 import CloudGate from './components/CloudGate'
+import TrashPage from './pages/Trash'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/recommenders" element={<Recommenders />} />
         <Route path="/tiers" element={<Tiers />} />
         <Route path="/on-hold" element={<OnHold />} />
+        <Route path="/trash" element={<TrashPage />} />
       </Routes>
     </Layout></CloudGate>
   )

@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { cloudConfigured } from '../lib/supabase'
 import { parseData } from '../lib/trackerData'
+import type { TrashEntry } from '../lib/trackerData'
+import { moveToTrash, restoreTrash } from '../lib/trash'
 import type { School, Material, Professor, Document, Recommender, Interview } from '../types'
 import { seedSchools, seedMaterials, seedProfessors, seedDocuments, seedRecommenders, seedInterviews } from '../data/seed'
 import { generateId } from '../lib/utils'
@@ -13,6 +15,9 @@ interface AppState {
   documents: Document[]
   recommenders: Recommender[]
   interviews: Interview[]
+  trash: TrashEntry[]
+  restoreFromTrash: (id: string) => void
+  permanentlyDelete: (id: string) => void
 
   // Schools
   addSchool: (school: Omit<School, 'id'>) => void
@@ -61,6 +66,9 @@ export const useAppStore = create<AppState>()(
       documents: seedDocuments,
       recommenders: seedRecommenders,
       interviews: seedInterviews,
+      trash: [],
+      restoreFromTrash: (id) => set(state => restoreTrash(state, id)),
+      permanentlyDelete: (id) => set(state => ({ trash: state.trash.filter(entry => entry.id !== id) })),
 
       addSchool: (school) =>
         set((state) => ({ schools: [...state.schools, { ...school, id: generateId() }] })),
@@ -69,11 +77,7 @@ export const useAppStore = create<AppState>()(
           schools: state.schools.map((s) => (s.id === id ? { ...s, ...school } : s)),
         })),
       deleteSchool: (id) =>
-        set((state) => ({
-          schools: state.schools.filter((s) => s.id !== id),
-          materials: state.materials.filter((m) => m.schoolId !== id),
-          professors: state.professors.filter((p) => p.schoolId !== id),
-        })),
+        set(state => moveToTrash(state, 'schools', id, generateId())),
       moveSchoolToOnHold: (id) =>
         set((state) => ({
           schools: state.schools.map((s) => (s.id === id ? { ...s, status: 'on-hold' as const } : s)),
@@ -90,7 +94,7 @@ export const useAppStore = create<AppState>()(
           materials: state.materials.map((m) => (m.id === id ? { ...m, ...material } : m)),
         })),
       deleteMaterial: (id) =>
-        set((state) => ({ materials: state.materials.filter((m) => m.id !== id) })),
+        set(state => moveToTrash(state, 'materials', id, generateId())),
 
       addProfessor: (professor) =>
         set((state) => ({ professors: [...state.professors, { ...professor, id: generateId() }] })),
@@ -99,7 +103,7 @@ export const useAppStore = create<AppState>()(
           professors: state.professors.map((p) => (p.id === id ? { ...p, ...professor } : p)),
         })),
       deleteProfessor: (id) =>
-        set((state) => ({ professors: state.professors.filter((p) => p.id !== id) })),
+        set(state => moveToTrash(state, 'professors', id, generateId())),
 
       addDocument: (document) =>
         set((state) => ({
@@ -115,7 +119,7 @@ export const useAppStore = create<AppState>()(
           ),
         })),
       deleteDocument: (id) =>
-        set((state) => ({ documents: state.documents.filter((d) => d.id !== id) })),
+        set(state => moveToTrash(state, 'documents', id, generateId())),
 
       addRecommender: (recommender) =>
         set((state) => ({
@@ -126,7 +130,7 @@ export const useAppStore = create<AppState>()(
           recommenders: state.recommenders.map((r) => (r.id === id ? { ...r, ...recommender } : r)),
         })),
       deleteRecommender: (id) =>
-        set((state) => ({ recommenders: state.recommenders.filter((r) => r.id !== id) })),
+        set(state => moveToTrash(state, 'recommenders', id, generateId())),
 
       addInterview: (interview) =>
         set((state) => ({ interviews: [...state.interviews, { ...interview, id: generateId() }] })),
@@ -135,7 +139,7 @@ export const useAppStore = create<AppState>()(
           interviews: state.interviews.map((i) => (i.id === id ? { ...i, ...interview } : i)),
         })),
       deleteInterview: (id) =>
-        set((state) => ({ interviews: state.interviews.filter((i) => i.id !== id) })),
+        set(state => moveToTrash(state, 'interviews', id, generateId())),
 
       exportData: () => {
         const state = get()
@@ -147,6 +151,7 @@ export const useAppStore = create<AppState>()(
             documents: state.documents,
             recommenders: state.recommenders,
             interviews: state.interviews,
+            trash: state.trash,
           },
           null,
           2

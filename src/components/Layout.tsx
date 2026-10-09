@@ -12,6 +12,7 @@ import {
   RotateCcw,
   GraduationCap,
   CalendarCheck,
+  Trash2,
 } from 'lucide-react'
 import { useAppStore } from '../stores/appStore'
 import { daysUntil } from '../lib/utils'
@@ -27,6 +28,7 @@ const navItems = [
   { to: '/recommenders', label: '推荐人管理', icon: Users },
   { to: '/tiers', label: '申请梯队', icon: BarChart3 },
   { to: '/on-hold', label: '备选与搁置', icon: Archive },
+  { to: '/trash', label: '回收站', icon: Trash2 },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {

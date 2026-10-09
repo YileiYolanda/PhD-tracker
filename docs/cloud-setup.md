@@ -3,7 +3,7 @@
 ## 1. 创建 Supabase 项目
 
 1. 打开 [Supabase 控制台](https://supabase.com/dashboard)，创建一个项目，选择适合使用地区的区域并保存数据库密码。
-2. 在项目的 SQL Editor 中运行仓库的 `supabase/migrations/001_tracker.sql`（只运行一次）。它创建数据库表、账号隔离权限，以及带版本检查的保存接口。
+2. 在项目的 SQL Editor 中依次运行仓库的 `supabase/migrations/001_tracker.sql` 和 `supabase/migrations/002_trash.sql`（各运行一次）。它们创建数据库表、账号隔离权限、带版本检查的保存接口，以及防止旧客户端覆盖回收站的保护。已经运行过 001 的项目只运行 002。
 3. 在项目 Connect 对话框或 Settings → API Keys 中复制项目 URL 和 publishable key（旧项目的 anon key 也可用）。
 4. **不要把 secret key、service_role key 或数据库密码写入前端环境变量。** 前端公钥是公开的；数据隔离由数据库策略与保存函数中验证过的账号身份保证。
 

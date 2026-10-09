@@ -243,7 +243,7 @@ export default function Overview() {
                 </button>
                 <button
                   onClick={() => {
-                    if (confirm('确定删除吗？')) deleteSchool(school.id)
+                    if (confirm('确定将该申请及关联的材料、导师与沟通记录、面试一起移入回收站吗？之后可以一起恢复。')) deleteSchool(school.id)
                   }}
                   className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition-colors"
                   title="删除"

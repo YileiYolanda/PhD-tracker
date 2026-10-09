@@ -377,7 +377,7 @@ export default function Outreach() {
                   </button>
                   <button
                     onClick={() => {
-                      if (confirm('确定删除吗？')) deleteProfessor(prof.id)
+                      if (confirm('确定移入回收站吗？之后可在回收站恢复。')) deleteProfessor(prof.id)
                     }}
                     className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800 transition-colors"
                   >
